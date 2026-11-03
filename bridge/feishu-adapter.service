@@ -1,0 +1,17 @@
+[Unit]
+Description=chat-bridge feishu adapter (WebSocket long connection)
+After=network-online.target cfb-ctyun-sales-tunnel-ac5ea8-svc-chat-bridge.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/home/hatch/workspace/chat-bridge
+ExecStart=/home/hatch/workspace/chat-bridge/run-feishu.sh
+Restart=always
+RestartSec=10
+StandardOutput=append:/home/hatch/workspace/projects/ctyun-sales-tunnel/logs/svc-feishu-adapter.log
+StandardError=append:/home/hatch/workspace/projects/ctyun-sales-tunnel/logs/svc-feishu-adapter.log
+
+[Install]
+WantedBy=multi-user.target

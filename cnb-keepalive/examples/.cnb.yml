@@ -1,0 +1,35 @@
+# CNB 流水线配置
+# main 分支 push 示例（平台示例，保留）
+main:
+  push:
+    - name: "your first CNB building"
+      stages:
+        - name: echo your build data
+          script: echo ${CNB_BUILD_USER} 通过 ${CNB_BRANCH} 分支触发了 ${CNB_EVENT} 事件
+
+# 云原生开发自动恢复（2026-11-03 起）
+# 网页启动（vscode）与 API 触发（api_trigger）共用同一套启动阶段：
+# 环境创建后自动执行 /workspace 里的恢复脚本（拉起 Tailscale+lxdapi、固定域名隧道）。
+$:
+  vscode:
+    - services:
+        - name: vscode
+          options:
+            keepAliveTimeout: 30m
+      stages:
+        - name: auto-restore
+          script: |
+            bash /workspace/start-dev-env.sh || true
+            bash /workspace/start-cnb-extras.sh || true
+            echo "cnb auto-restore done"
+  api_trigger:
+    - services:
+        - name: vscode
+          options:
+            keepAliveTimeout: 30m
+      stages:
+        - name: auto-restore
+          script: |
+            bash /workspace/start-dev-env.sh || true
+            bash /workspace/start-cnb-extras.sh || true
+            echo "cnb auto-restore done"
